@@ -3,6 +3,7 @@ name: Terraform Deploy
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:  # ✅ дозволяє запуск вручну (опціонально)
 
 jobs:
   terraform:
@@ -34,6 +35,6 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+
