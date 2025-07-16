@@ -2,30 +2,34 @@ name: Terraform Deploy
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
+    branches: [ main ] # можеш змінити або додати pull_request при потребі
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1  # змінити, якщо інша зона
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::575108957896:role/Terraform_ROLE
-          aws-region: us-east-1
-
-      - name: Setup Terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.6  # або 1.5.x/1.6.x — краще застарілу 1.12.2 не використовувати
+          terraform_version: 1.6.6  # можеш змінити на потрібну версію
 
       - name: Terraform Init
         run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform Plan
         run: terraform plan
