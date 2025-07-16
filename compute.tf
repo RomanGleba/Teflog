@@ -3,7 +3,7 @@ resource "aws_instance" "production_instance" {
 ami =   "ami-020cba7c55df1f615"
 instance_type = "t3.micro"
 vpc_security_group_ids = [aws_security_group.pd_security_group.id]
-key_name = aws_key_pair.default_key.key_name
+
 subnet_id = aws_subnet.subnet1.id
 }
 
